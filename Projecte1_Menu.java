@@ -1,5 +1,15 @@
 package Projecte1;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,7 +28,7 @@ public class Projecte1_Menu {
         String servidor = "jdbc:mysql://localhost:3306/";
         String bbdd = "empresa";
         String user = "root";
-        String password = "root";
+        String password = "mysql";
         try {
             connexioBD = DriverManager.getConnection(servidor + bbdd, user, password);
         } catch (SQLException ex) {
@@ -27,7 +37,9 @@ public class Projecte1_Menu {
 
     }
 
-    public static void main(String[] args) throws SQLException {
+    static final String Processat = ("ENTRADES PROCESSADES/");
+
+    public static void main(String[] args) throws SQLException, IOException {
 
         boolean sortir = false;
         connexioBD();
@@ -287,8 +299,65 @@ public class Projecte1_Menu {
 
     }
 
-    static void ActualitzarEstoc() {
+    static void ActualitzarEstoc() throws IOException, SQLException {
 
+        // Crear els directoris que no existeix a la ruta que escriuras
+        File fitxer2 = new File("ENTRADES PENDENTS");
+        fitxer2.mkdirs();
+        File fitxer3 = new File("ENTRADES PROCESSADES");
+        fitxer3.mkdirs();
+
+        if (fitxer2.isDirectory()) {
+            System.out.println("És un directori");
+
+            // Lista dels fitxers que estan a dins de la carpeta
+            File[] fitxers = fitxer2.listFiles();
+            for (int i = 0; i < fitxers.length; i++) {
+                System.out.println(fitxers[i].getName());
+                ActualitzarStock(fitxers[i]);
+                MoureFitxers(fitxers[i]);
+            }
+
+        }
+    }
+
+    static void ActualitzarStock(File fitxers) throws IOException, SQLException {
+
+        // Llegeix caràcter a caràcter
+        FileReader reader = new FileReader(fitxers);
+        // Llegeix linia a linia, es més eficient
+        BufferedReader buffer = new BufferedReader(reader);
+
+        String linia;
+        while ((linia = buffer.readLine()) != null) {
+            System.out.println(linia);
+
+            int posSep = linia.indexOf(":");
+            int id = Integer.parseInt(linia.substring(0, posSep));
+            int estoc = Integer.parseInt(linia.substring(posSep + 1));
+
+            String actualitzar = "UPDATE productes SET estoc=estoc + ? where id=?";
+            PreparedStatement sentencia = connexioBD.prepareStatement(actualitzar);
+
+            sentencia.setInt(1, estoc);
+            sentencia.setInt(2, id);
+
+            sentencia.executeUpdate();
+
+        }
+
+        buffer.close();
+        reader.close();
+
+    }
+
+    static void MoureFitxers(File fitxers) throws IOException {
+        FileSystem sistemaFitxers = FileSystems.getDefault();
+        Path origen = sistemaFitxers.getPath("ENTRADES PENDENTS/" + fitxers.getName());
+        Path destí = sistemaFitxers.getPath("ENTRADES PROCESSADES/" + fitxers.getName());
+
+        Files.move(origen, destí, StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("S'ha mogut ha processats el fitxer: " + fitxers.getName());
     }
 
     static void PrepararComandes() {
