@@ -37,8 +37,6 @@ public class Projecte1_Menu {
 
     }
 
-    static final String Processat = ("ENTRADES PROCESSADES/");
-
     public static void main(String[] args) throws SQLException, IOException {
 
         boolean sortir = false;
@@ -55,23 +53,23 @@ public class Projecte1_Menu {
             int opció = teclat.nextInt();
             // Et demana posar un valor a la terminal per executar X comanda
             switch (opció) {
-            case 1:
-                GestioProductes();
-                break;
-            case 2:
-                ActualitzarEstoc();
-                break;
-            case 3:
-                PrepararComandes();
-                break;
-            case 4:
-                AnalitzarComandes();
-                break;
-            case 5:
-                sortir = true;
-                break;
-            default:
-                System.out.println("L'opció " + opció + " no existeix.");
+                case 1:
+                    GestioProductes();
+                    break;
+                case 2:
+                    ActualitzarEstoc();
+                    break;
+                case 3:
+                    PrepararComandes();
+                    break;
+                case 4:
+                    AnalitzarComandes();
+                    break;
+                case 5:
+                    sortir = true;
+                    break;
+                default:
+                    System.out.println("L'opció " + opció + " no existeix.");
             }
         } while (!sortir);
 
@@ -95,25 +93,25 @@ public class Projecte1_Menu {
 
             // Et demana posar un valor a la terminal per executar X comanda
             switch (opció) {
-            case 1:
-                LlistatTotsElsProductes();
-                break;
-            case 2:
-                AltaProducte();
-                break;
-            case 3:
-                ModificarProducte();
-                break;
-            case 4:
-                EliminarProducte();
-                break;
-            case 5:
-                ConsultaProducte();
-            case 6:
-                sortir = true;
-                break;
-            default:
-                System.out.println("L'opció " + opció + " no existeix.");
+                case 1:
+                    LlistatTotsElsProductes();
+                    break;
+                case 2:
+                    AltaProducte();
+                    break;
+                case 3:
+                    ModificarProducte();
+                    break;
+                case 4:
+                    EliminarProducte();
+                    break;
+                case 5:
+                    ConsultaProducte();
+                case 6:
+                    sortir = true;
+                    break;
+                default:
+                    System.out.println("L'opció " + opció + " no existeix.");
             }
         } while (!sortir);
 
@@ -353,9 +351,13 @@ public class Projecte1_Menu {
 
     static void MoureFitxers(File fitxers) throws IOException {
         FileSystem sistemaFitxers = FileSystems.getDefault();
+        // La ruta de la carpeta de entrades pendents la passem a una variable
         Path origen = sistemaFitxers.getPath("ENTRADES PENDENTS/" + fitxers.getName());
+        // La ruta de la carpeta de processades pendents la passem a una variable
         Path destí = sistemaFitxers.getPath("ENTRADES PROCESSADES/" + fitxers.getName());
 
+        // Comanda per moure els fitxers on estan la id dels productes i el seu nou
+        // estoc a la carpeta ENTRADES PROCESSADES
         Files.move(origen, destí, StandardCopyOption.REPLACE_EXISTING);
         System.out.println("S'ha mogut ha processats el fitxer: " + fitxers.getName());
     }
