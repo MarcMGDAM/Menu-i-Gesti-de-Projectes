@@ -405,7 +405,6 @@ public class Projecte1_MenuDefinitiu {
 
             nom_proveidor[i] = actproveidor;
             System.out.println("Array:" + nom_proveidor[i]);
-            i++;
             do {
 
                 if (!actproveidor.equals(rs.getString("Prov.nom"))) {
@@ -415,23 +414,23 @@ public class Projecte1_MenuDefinitiu {
                     actproveidor = rs.getString("Prov.nom");
                     escritor.close();
 
+                    i++;
+
                     nom_proveidor[i] = actproveidor;
                     System.out.println("Array: " + nom_proveidor[i]);
-                    i++;
 
                     productes = 0;
                     in++;
                     CrearFitxer(actproveidor, rs);
 
-                }               
-                
+                }
 
                 System.out.print("ID PRODUCTE: " + rs.getInt("id") + " ");
                 System.out.print("Estoc restant: " + (300 - rs.getInt("estoc")) + " ");
-                System.out.println("NIF proveïdor:  " + rs.getString("NIF") + " ");     
+                System.out.println("NIF proveïdor:  " + rs.getString("NIF") + " ");
 
                 productes++;
-                num_productes[in] = productes;                
+                num_productes[in] = productes;
 
                 escritor.println("   " + rs.getInt("id") + "\t\t\t" + (300 - rs.getInt("estoc")));
             } while (rs.next());
@@ -459,7 +458,7 @@ public class Projecte1_MenuDefinitiu {
         escritor.println("\nID producte" + "       " + "Estoc sol·licitant");
     }
 
-    static void AnalitzarComandes(){     
+    static void AnalitzarComandes() {
 
         ProductesDemanats();
         MaxProductesDemanats();
@@ -468,18 +467,20 @@ public class Projecte1_MenuDefinitiu {
 
     }
 
-    static void ProductesDemanats(){
+    static void ProductesDemanats() {
 
         for (int i = 0; i < nom_proveidor.length; i++) {
-            System.out.println("El proveïdor " + nom_proveidor[i] + " ha sol·licitat "+ num_productes[i] + " productes.");
+            System.out.println(
+                    "El proveïdor " + nom_proveidor[i] + " ha sol·licitat " + num_productes[i] + " productes.");
         }
 
     }
-    static void MaxProductesDemanats(){
+
+    static void MaxProductesDemanats() {
 
         int maxim = 0;
         int imaxim = 0;
-        for (int i = 0;i < nom_proveidor.length; i++) {
+        for (int i = 0; i < nom_proveidor.length; i++) {
 
             if (num_productes[i] > maxim) {
 
@@ -491,7 +492,7 @@ public class Projecte1_MenuDefinitiu {
         System.out.println("\n" + "El proveïdor " + nom_proveidor[imaxim] + " ha sol·licitat " + maxim);
     }
 
-    static void MinProductesDemanats(){
+    static void MinProductesDemanats() {
         int minim = num_productes[0];
         int iminim = 0;
         for (int i = 0; i < nom_proveidor.length; i++) {
