@@ -38,8 +38,8 @@ public class Projecte1_MenuDefinitiu {
     static BufferedWriter fitxerbuff = null;
     static PrintWriter escritor = null;
 
-    static String[] nom_proveidor = new String[3];
-    static int[] num_productes = new int[3];
+    static String[] nom_proveidor = new String[50];
+    static int[] num_productes = new int[50];
 
     // throws SQLException
     static void connexioBD() {
@@ -186,6 +186,37 @@ public class Projecte1_MenuDefinitiu {
         sentencia.setInt(4, codi_categoria);
 
         sentencia.executeUpdate();
+
+        String consulta_prod = "SELECT id FROM productes where nom='" + nom + "'";
+        PreparedStatement sentencia2 = connexioBD.prepareStatement(consulta_prod);
+
+        ResultSet rs = sentencia2.executeQuery();
+
+        int ID = 0;
+
+        while (rs.next()) {
+            ID = rs.getInt("id");
+        }
+
+        System.out.println("Codi del Material en que està format el Producte: ");
+        System.out.println("1. Fusta ");
+        System.out.println("2. Fibra ");
+        System.out.println("3. Acer ");
+        System.out.println("4. Alumini ");
+        System.out.println("5. Vidre ");
+        System.out.println("6. Tela ");
+        System.out.println("7. Guata ");
+        System.out.println("8. Plàstic ");
+
+        int codi = teclat.nextInt();
+
+        String inserció2 = "INSERT INTO formats (id, codi) value (?,?)";
+        PreparedStatement sentencia3 = connexioBD.prepareStatement(inserció2);
+
+        sentencia3.setInt(1, ID);
+        sentencia3.setInt(2, codi);
+
+        sentencia3.executeUpdate();
 
     }
 
@@ -443,7 +474,7 @@ public class Projecte1_MenuDefinitiu {
 
         // Crear el fitxer, que de nom es el nom del proveïdor, la data de avui i sera
         // un fitxer .txt
-        fitxer = new FileWriter("E:\\DAM 1r\\M3\\UF 1\\Exercicis programa classe\\COMANDES\\"
+        fitxer = new FileWriter("D:\\DAM 1r\\M3\\UF 1\\Exercicis programa classe\\COMANDES\\"
                 + actproveidor + LocalDate.now() + ".txt", false);
         fitxerbuff = new BufferedWriter(fitxer);
         escritor = new PrintWriter(fitxerbuff);
