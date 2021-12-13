@@ -38,15 +38,15 @@ public class Projecte1_MenuDefinitiu {
     static BufferedWriter fitxerbuff = null;
     static PrintWriter escritor = null;
 
-    static String[] nom_proveidor = new String[50];
-    static int[] num_productes = new int[50];
+    static String[] nom_proveidor = new String[3];
+    static int[] num_productes = new int[3];
 
     // throws SQLException
     static void connexioBD() {
-        String servidor = "jdbc:mysql://localhost:3306/";
+        String servidor = "jdbc:mysql://192.168.1.120:3306/";
         String bbdd = "empresa";
-        String user = "root";
-        String password = "mysql";
+        String user = "roger";
+        String password = "roger";
         try {
             connexioBD = DriverManager.getConnection(servidor + bbdd, user, password);
         } catch (SQLException ex) {
@@ -139,7 +139,7 @@ public class Projecte1_MenuDefinitiu {
 
         System.out.println("LListat de tots els productes");
 
-        String consulta = "SELECT * FROM productes order by id";
+        String consulta = "SELECT * FROM Productes order by id";
 
         PreparedStatement ps = connexioBD.prepareStatement(consulta);
 
@@ -177,7 +177,7 @@ public class Projecte1_MenuDefinitiu {
         System.out.print("Codi_categoria: ");
         int codi_categoria = teclat.nextInt();
 
-        String inserció = "INSERT INTO productes (nom, estoc, imatge, codi_categoria) value (?,?,?,?)";
+        String inserció = "INSERT INTO Productes (nom, estoc, imatge, codi_categoria) value (?,?,?,?)";
         PreparedStatement sentencia = connexioBD.prepareStatement(inserció);
 
         sentencia.setString(1, nom);
@@ -187,7 +187,7 @@ public class Projecte1_MenuDefinitiu {
 
         sentencia.executeUpdate();
 
-        String consulta_prod = "SELECT id FROM productes where nom='" + nom + "'";
+        String consulta_prod = "SELECT id FROM Productes where nom='" + nom + "'";
         PreparedStatement sentencia2 = connexioBD.prepareStatement(consulta_prod);
 
         ResultSet rs = sentencia2.executeQuery();
@@ -210,7 +210,7 @@ public class Projecte1_MenuDefinitiu {
 
         int codi = teclat.nextInt();
 
-        String inserció2 = "INSERT INTO formats (id, codi) value (?,?)";
+        String inserció2 = "INSERT INTO Formats (id, codi) value (?,?)";
         PreparedStatement sentencia3 = connexioBD.prepareStatement(inserció2);
 
         sentencia3.setInt(1, ID);
@@ -227,7 +227,7 @@ public class Projecte1_MenuDefinitiu {
         teclat.nextLine();
 
         // Primer seleccionarem les dades de tots els productes
-        String productes = " SELECT * FROM productes WHERE id =" + id;
+        String productes = " SELECT * FROM Productes WHERE id =" + id;
         PreparedStatement dades = connexioBD.prepareStatement(productes);
         dades.executeQuery();
 
@@ -245,7 +245,7 @@ public class Projecte1_MenuDefinitiu {
 
             // Posem els atributs dels productes per a que els hi puguem canviar de valor si
             // volem
-            String actualitzar = "UPDATE productes SET nom = ?, estoc= ?, imatge= ?, codi_categoria= ? where id = "
+            String actualitzar = "UPDATE Productes SET nom = ?, estoc= ?, imatge= ?, codi_categoria= ? where id = "
                     + id;
             PreparedStatement sentencia = connexioBD.prepareStatement(actualitzar);
 
@@ -312,7 +312,7 @@ public class Projecte1_MenuDefinitiu {
         int id = teclat.nextInt();
 
         // Comanda per eliminar un producte juntament amb els seus atributs
-        String eliminar = "DELETE from productes where id=?; ";
+        String eliminar = "DELETE from Productes where id=?; ";
         PreparedStatement sentencia = connexioBD.prepareStatement(eliminar);
 
         sentencia.setInt(1, id);
@@ -328,7 +328,7 @@ public class Projecte1_MenuDefinitiu {
         int id = teclat.nextInt();
 
         // Comanda per consulta un sol producte amb els seus atrbiuts
-        String consulta = "SELECT * from productes where id=?; ";
+        String consulta = "SELECT * from Productes where id=?; ";
 
         PreparedStatement sentencia = connexioBD.prepareStatement(consulta);
 
@@ -383,7 +383,7 @@ public class Projecte1_MenuDefinitiu {
             int id = Integer.parseInt(linia.substring(0, posSep));
             int estoc = Integer.parseInt(linia.substring(posSep + 1));
 
-            String actualitzar = "UPDATE productes SET estoc=estoc + ? where id=?";
+            String actualitzar = "UPDATE Productes SET estoc=estoc + ? where id=?";
             PreparedStatement sentencia = connexioBD.prepareStatement(actualitzar);
 
             sentencia.setInt(1, estoc);
@@ -415,7 +415,7 @@ public class Projecte1_MenuDefinitiu {
 
         System.out.println("Generació de comandes");
 
-        String consulta = "SELECT Pr.id, Pr.nom, Pr.estoc, P.NIF, Prov.nom, Prov.telèfon, Prov.direcció from productes Pr join proveeix P join proveïdors Prov on Pr.id = P.id and P.NIF = Prov.NIF where estoc <20 order by NIF";
+        String consulta = "SELECT Pr.id, Pr.nom, Pr.estoc, P.NIF, Prov.nom, Prov.telèfon, Prov.direcció from Productes Pr join Proveeix P join Proveïdors Prov on Pr.id = P.id and P.NIF = Prov.NIF where estoc <20 order by NIF";
 
         PreparedStatement ps = connexioBD.prepareStatement(consulta);
 
@@ -502,7 +502,7 @@ public class Projecte1_MenuDefinitiu {
 
         for (int i = 0; i < nom_proveidor.length; i++) {
             System.out.println(
-                    "El proveïdor " + nom_proveidor[i] + " ha sol·licitat " + num_productes[i] + " productes.");
+                    "Hem sol·licitat " + num_productes[i] + " productes al proveïdor " + nom_proveidor[i]);
         }
 
     }
@@ -520,7 +520,8 @@ public class Projecte1_MenuDefinitiu {
             }
 
         }
-        System.out.println("\n" + "El proveïdor " + nom_proveidor[imaxim] + " ha sol·licitat " + maxim);
+        System.out.println("\n" + "El proveïdor que més productes l'hem sol·licitat és:" + nom_proveidor[imaxim]
+                + " amb " + maxim + " producte/s");
     }
 
     static void MinProductesDemanats() {
@@ -535,7 +536,8 @@ public class Projecte1_MenuDefinitiu {
             }
         }
 
-        System.out.println("\n" + "El proveïdor " + nom_proveidor[iminim] + " ha sol·licitat " + minim);
+        System.out.println("\n" + "El proveïdor que menys productes l'hem sol·licitat és:" + nom_proveidor[iminim]
+                + " amb " + minim + " producte/s");
     }
 
     static void MitjanaProductesDemanats() {
@@ -548,7 +550,7 @@ public class Projecte1_MenuDefinitiu {
         }
         mitjana = suma / num_productes.length;
 
-        System.out.println("\n" + "La mitjana de tots els productes sol·licitats és: " + mitjana);
+        System.out.println("\n" + "La mitjana de productes sol·licitats és: " + mitjana);
 
     }
 }
